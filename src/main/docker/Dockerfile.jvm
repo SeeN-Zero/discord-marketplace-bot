@@ -1,0 +1,20 @@
+FROM maven:3.9.11-eclipse-temurin-21 AS build
+WORKDIR /workspace
+
+COPY .mvn/ .mvn/
+COPY mvnw mvnw
+COPY pom.xml pom.xml
+COPY src/ src/
+
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
+RUN ./mvnw -B -DskipTests package
+
+FROM eclipse-temurin:21-jre
+WORKDIR /deployments
+
+COPY --from=build /workspace/target/quarkus-app/ /deployments/
+
+EXPOSE 8080
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /deployments/quarkus-run.jar"]
