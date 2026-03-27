@@ -149,7 +149,7 @@ Workflow file:
 - `.github/workflows/cd-ssh-gcp.yml`
 
 Trigger:
-- Push ke branch `main`
+- Push ke branch `master`
 - Manual run (`workflow_dispatch`)
 
 GitHub repository secrets yang perlu diisi:
