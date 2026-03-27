@@ -35,6 +35,13 @@ jobs:
             git checkout "$BRANCH"
             git reset --hard "origin/$BRANCH"
 
+            if [ ! -d "src" ] || [ ! -f "pom.xml" ] || [ ! -f "docker-compose.yml" ]; then
+              echo "Invalid APP_DIR: expected repo root containing src/, pom.xml, and docker-compose.yml"
+              echo "Current directory: $(pwd)"
+              ls -la
+              exit 1
+            fi
+
             cat > .env <<EOF
             QUARKUS_DATASOURCE_JDBC_URL=${{ secrets.QUARKUS_DATASOURCE_JDBC_URL }}
             QUARKUS_DATASOURCE_USERNAME=${{ secrets.QUARKUS_DATASOURCE_USERNAME }}
